@@ -39,7 +39,6 @@ const ctas = [
 
 export default function CTA() {
   const sectionRef = useRef<HTMLElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
   const columnsRef = useRef<HTMLDivElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -55,15 +54,6 @@ export default function CTA() {
           toggleActions: 'play none none none',
         },
       });
-
-      if (carouselRef.current) {
-        tl.fromTo(
-          carouselRef.current,
-          { opacity: 0, scale: 0.98 },
-          { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' },
-          0
-        );
-      }
 
       if (columnsRef.current) {
         const cols = columnsRef.current.querySelectorAll('.cta-column');
@@ -96,34 +86,6 @@ export default function CTA() {
     return () => ctx.revert();
   }, []);
 
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    const track = carousel.querySelector('.carousel-track') as HTMLElement;
-    if (!track) return;
-
-    const totalWidth = track.scrollWidth;
-    const viewportWidth = track.clientWidth;
-    const distance = totalWidth - viewportWidth;
-
-    gsap.set(track, { x: 0 });
-
-    gsap.to(track, {
-      x: -distance,
-      duration: distance / 30,
-      ease: 'none',
-      repeat: -1,
-      modifiers: {
-        x: gsap.utils.unitize((x) => parseFloat(x) % distance),
-      },
-    });
-
-    return () => {
-      gsap.killTweensOf(track);
-    };
-  }, []);
-
   return (
     <section
       ref={sectionRef}
@@ -131,16 +93,13 @@ export default function CTA() {
       className="relative min-h-screen bg-umber flex flex-col items-center justify-center py-24 md:py-32 overflow-hidden"
     >
       {/* Cinematic Carousel */}
-      <div
-        ref={carouselRef}
-        className="relative w-full max-w-[2160px] aspect-[216/92.5] mb-16 md:mb-20 overflow-hidden opacity-0"
-      >
+      <div className="relative w-full max-w-[2160px] aspect-[216/92.5] mb-16 md:mb-20 overflow-hidden">
         <div className="absolute inset-0 flex items-center">
-          <div className="carousel-track flex gap-4 will-change-transform">
-            {[...carouselImages, ...carouselImages, ...carouselImages].map((src, i) => (
+          <div className="carousel-track flex gap-4">
+            {[...carouselImages, ...carouselImages, ...carouselImages, ...carouselImages].map((src, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-[calc(2160px/4)] aspect-[216/92.5] overflow-hidden"
+                className="flex-shrink-0 w-[calc(100vw/2)] md:w-[calc(100vw/4)] max-w-[540px] aspect-[216/92.5] overflow-hidden"
               >
                 <img
                   src={src}
@@ -153,6 +112,15 @@ export default function CTA() {
           </div>
         </div>
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-umber via-transparent to-umber" />
+        <style>{`
+          .carousel-track {
+            animation: scroll-left 40s linear infinite;
+          }
+          @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-25%); }
+          }
+        `}</style>
       </div>
 
       {/* CTA Columns */}
