@@ -130,9 +130,6 @@ Build the project (`pnpm build`) and deploy the `dist/` folder to any static hos
 - Smooth scroll with Lenis
 - Section transitions with GSAP
 
-## License
-
-MIT License — see LICENSE file for details.
 
 ---
 
