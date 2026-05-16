@@ -4,6 +4,24 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const carouselImages = [
+  '/images/editorial-1.jpg',
+  '/images/editorial-2.jpg',
+  '/images/editorial-3.jpg',
+  '/images/editorial-4.jpg',
+  '/images/editorial-5.jpg',
+  '/images/editorial-6.jpg',
+  '/images/editorial-7.jpg',
+  '/images/editorial-8.jpg',
+  '/images/editorial-9.jpg',
+  '/images/collection-1.jpg',
+  '/images/collection-2.jpg',
+  '/images/collection-3.jpg',
+  '/images/collection-4.jpg',
+  '/images/collection-5.jpg',
+  '/images/collection-6.jpg',
+];
+
 const ctas = [
   {
     title: 'Press Inquiries',
@@ -21,6 +39,7 @@ const ctas = [
 
 export default function CTA() {
   const sectionRef = useRef<HTMLElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const columnsRef = useRef<HTMLDivElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -37,13 +56,22 @@ export default function CTA() {
         },
       });
 
+      if (carouselRef.current) {
+        tl.fromTo(
+          carouselRef.current,
+          { opacity: 0, scale: 0.98 },
+          { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' },
+          0
+        );
+      }
+
       if (columnsRef.current) {
         const cols = columnsRef.current.querySelectorAll('.cta-column');
         tl.fromTo(
           cols,
           { opacity: 0, y: 60 },
           { opacity: 1, y: 0, stagger: 0.15, duration: 0.6, ease: 'power3.out' },
-          0
+          0.3
         );
 
         const descs = columnsRef.current.querySelectorAll('.cta-desc');
@@ -51,7 +79,7 @@ export default function CTA() {
           descs,
           { opacity: 0 },
           { opacity: 0.6, stagger: 0.15, duration: 0.4 },
-          0.3
+          0.5
         );
       }
 
@@ -60,12 +88,40 @@ export default function CTA() {
           taglineRef.current,
           { opacity: 0 },
           { opacity: 0.5, duration: 0.5 },
-          0.6
+          0.8
         );
       }
     }, sectionRef);
 
     return () => ctx.revert();
+  }, []);
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const track = carousel.querySelector('.carousel-track') as HTMLElement;
+    if (!track) return;
+
+    const totalWidth = track.scrollWidth;
+    const viewportWidth = track.clientWidth;
+    const distance = totalWidth - viewportWidth;
+
+    gsap.set(track, { x: 0 });
+
+    gsap.to(track, {
+      x: -distance,
+      duration: distance / 30,
+      ease: 'none',
+      repeat: -1,
+      modifiers: {
+        x: gsap.utils.unitize((x) => parseFloat(x) % distance),
+      },
+    });
+
+    return () => {
+      gsap.killTweensOf(track);
+    };
   }, []);
 
   return (
@@ -74,6 +130,31 @@ export default function CTA() {
       id="cta"
       className="relative min-h-screen bg-umber flex flex-col items-center justify-center py-24 md:py-32 overflow-hidden"
     >
+      {/* Cinematic Carousel */}
+      <div
+        ref={carouselRef}
+        className="relative w-full max-w-[2160px] aspect-[216/92.5] mb-16 md:mb-20 overflow-hidden opacity-0"
+      >
+        <div className="absolute inset-0 flex items-center">
+          <div className="carousel-track flex gap-4 will-change-transform">
+            {[...carouselImages, ...carouselImages, ...carouselImages].map((src, i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 w-[calc(2160px/4)] aspect-[216/92.5] overflow-hidden"
+              >
+                <img
+                  src={src}
+                  alt={`carousel-${i}`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-umber via-transparent to-umber" />
+      </div>
+
       {/* CTA Columns */}
       <div
         ref={columnsRef}
