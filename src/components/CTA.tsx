@@ -21,7 +21,6 @@ const ctas = [
 
 export default function CTA() {
   const sectionRef = useRef<HTMLElement>(null);
-  const archwayRef = useRef<HTMLDivElement>(null);
   const columnsRef = useRef<HTMLDivElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -38,22 +37,13 @@ export default function CTA() {
         },
       });
 
-      if (archwayRef.current) {
-        tl.fromTo(
-          archwayRef.current,
-          { opacity: 0, scale: 0.95 },
-          { opacity: 1, scale: 1, duration: 1, ease: 'power3.out' },
-          0
-        );
-      }
-
       if (columnsRef.current) {
         const cols = columnsRef.current.querySelectorAll('.cta-column');
         tl.fromTo(
           cols,
           { opacity: 0, y: 60 },
           { opacity: 1, y: 0, stagger: 0.15, duration: 0.6, ease: 'power3.out' },
-          0.4
+          0
         );
 
         const descs = columnsRef.current.querySelectorAll('.cta-desc');
@@ -61,7 +51,7 @@ export default function CTA() {
           descs,
           { opacity: 0 },
           { opacity: 0.6, stagger: 0.15, duration: 0.4 },
-          0.7
+          0.3
         );
       }
 
@@ -70,7 +60,7 @@ export default function CTA() {
           taglineRef.current,
           { opacity: 0 },
           { opacity: 0.5, duration: 0.5 },
-          1
+          0.6
         );
       }
     }, sectionRef);
@@ -84,46 +74,6 @@ export default function CTA() {
       id="cta"
       className="relative min-h-screen bg-umber flex flex-col items-center justify-center py-24 md:py-32 overflow-hidden"
     >
-      {/* CSS Archway */}
-      <div
-        ref={archwayRef}
-        className="relative w-full max-w-lg h-[40vh] md:h-[50vh] mb-12 md:mb-16 opacity-0"
-      >
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative w-64 h-72 md:w-80 md:h-80">
-            {/* Left pillar */}
-            <div className="absolute left-4 md:left-8 bottom-0 w-5 md:w-6 h-full bg-[#2D2825]/60 rounded-t-sm" />
-            {/* Right pillar */}
-            <div className="absolute right-4 md:right-8 bottom-0 w-5 md:w-6 h-full bg-[#2D2825]/60 rounded-t-sm" />
-            {/* Top lintel */}
-            <div className="absolute top-0 left-0 right-0 h-4 md:h-5 bg-[#4A4440] rounded-sm" />
-            {/* Terracotta accent */}
-            <div className="absolute top-[-4px] md:top-[-5px] left-0 right-0 h-1 bg-[#C73B2B]" />
-            {/* Floating geometric elements */}
-            {Array.from({ length: 8 }).map((_, i) => {
-              const angle = (i / 8) * Math.PI * 2;
-              const radius = 55;
-              const x = Math.cos(angle) * radius;
-              const y = 90 + Math.sin(angle * 0.5) * 35;
-              const isRed = i % 2 === 0;
-              return (
-                <div
-                  key={i}
-                  className="absolute w-3 h-3"
-                  style={{
-                    left: `calc(50% + ${x}px)`,
-                    top: y,
-                    backgroundColor: isRed ? '#C73B2B' : '#D4A84B',
-                    transform: `rotate(${angle * 30}deg)`,
-                    boxShadow: `0 0 8px ${isRed ? '#C73B2B' : '#D4A84B'}`,
-                  }}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
       {/* CTA Columns */}
       <div
         ref={columnsRef}
