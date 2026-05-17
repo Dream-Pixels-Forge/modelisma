@@ -6,32 +6,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 const editorials = [
   {
-    image: '/images/editorial-1.jpg',
+    image: '/images/editorial-1.webp',
     collection: 'The Column — SS / 2024',
     credit: 'Photography: Deborah Sikidisa',
   },
   {
-    image: '/images/editorial-2.jpg',
-    collection: 'The Façade — AW / 2024',
-    credit: 'Photography: Kofi Mensah',
-  },
-  {
-    image: '/images/editorial-3.jpg',
+    image: '/images/editorial-3.webp',
     collection: 'The Span — SS / 2025',
     credit: 'Photography: Zara Ibrahim',
   },
   {
-    image: '/images/editorial-4.jpg',
-    collection: 'The Vertex — FW / 2025',
-    credit: 'Photography: Amina Diallo',
-  },
-  {
-    image: '/images/editorial-5.jpg',
+    image: '/images/editorial-5.webp',
     collection: 'The Arch — SS / 2026',
     credit: 'Photography: Thabo Nkosi',
   },
   {
-    image: '/images/editorial-6.jpg',
+    image: '/images/editorial-6.webp',
     collection: 'The Cantilever — AW / 2026',
     credit: 'Photography: Nia Mbeki',
   },
@@ -45,13 +35,15 @@ export default function Editorial() {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      itemsRef.current.forEach((item) => {
+      itemsRef.current.forEach((item, i) => {
         if (!item) return;
 
         const img = item.querySelector('.editorial-img');
         const label = item.querySelector('.editorial-label');
         const credit = item.querySelector('.editorial-credit');
         const parallaxBg = item.querySelector('.parallax-bg');
+
+        const pace = [1, 2, 0.8, 1.5][i] || 1;
 
         // Ken Burns + clip-path reveal
         if (img) {
@@ -66,7 +58,7 @@ export default function Editorial() {
                 trigger: item,
                 start: 'top 80%',
                 end: 'top 20%',
-                scrub: 1,
+                scrub: pace,
               },
             }
           );
@@ -81,7 +73,7 @@ export default function Editorial() {
               trigger: item,
               start: 'top bottom',
               end: 'bottom top',
-              scrub: true,
+              scrub: 2,
             },
           });
         }
@@ -129,7 +121,7 @@ export default function Editorial() {
     <section ref={sectionRef} id="editorial" className="relative bg-umber">
       <div className="py-16 md:py-24 px-6 md:px-12">
         <h2
-          className="text-ivory font-syne text-3xl md:text-[clamp(2.5rem,5vw,4rem)] tracking-[-0.02em] mb-16 md:mb-24 max-w-7xl mx-auto"
+          className="text-ivory font-syne text-3xl md:text-[clamp(2.5rem,5vw,4rem)] tracking-[-0.02em] mb-12 md:mb-16 max-w-7xl mx-auto"
           style={{ fontFamily: "'Syne', sans-serif" }}
         >
           Architectural Studies
@@ -140,14 +132,14 @@ export default function Editorial() {
         <div
           key={i}
           ref={(el) => { itemsRef.current[i] = el; }}
-          className="relative min-h-[80vh] md:min-h-screen overflow-hidden group"
+          className="relative min-h-[70vh] md:min-h-[80vh] overflow-hidden group"
         >
           {/* Image with Ken Burns and parallax */}
           <div
-            className="editorial-img absolute inset-0 overflow-hidden"
+            className="editorial-img absolute inset-0 overflow-hidden will-change-transform"
             style={{ clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)' }}
           >
-            <div className="parallax-bg absolute inset-[-15%] w-[130%] h-[130%]">
+            <div className="parallax-bg absolute inset-[-15%] w-[130%] h-[130%] will-change-transform">
               <img
                 src={editorial.image}
                 alt={editorial.collection}

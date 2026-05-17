@@ -5,12 +5,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const talents = [
-  { name: 'Kofi Mensah', city: 'Accra', image: '/images/talent-1.jpg' },
-  { name: 'Zara Ibrahim', city: 'Lagos', image: '/images/talent-2.jpg' },
-  { name: 'Thabo Nkosi', city: 'Johannesburg', image: '/images/talent-3.jpg' },
-  { name: 'Amina Diallo', city: 'Dakar', image: '/images/talent-4.jpg' },
-  { name: 'Oluwaseun Ade', city: 'Lagos', image: '/images/talent-5.jpg' },
-  { name: 'Nia Mbeki', city: 'Nairobi', image: '/images/talent-6.jpg' },
+  { name: 'Kofi Mensah', city: 'Accra', image: '/images/talent-1.webp' },
+  { name: 'Zara Ibrahim', city: 'Lagos', image: '/images/talent-2.webp' },
+  { name: 'Thabo Nkosi', city: 'Johannesburg', image: '/images/talent-3.webp' },
+  { name: 'Amina Diallo', city: 'Dakar', image: '/images/talent-4.webp' },
+  { name: 'Oluwaseun Ade', city: 'Lagos', image: '/images/talent-5.webp' },
+  { name: 'Nia Mbeki', city: 'Nairobi', image: '/images/talent-6.webp' },
 ];
 
 export default function Talent() {
@@ -23,7 +23,6 @@ export default function Talent() {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Grid assembly
       if (gridRef.current) {
         const items = gridRef.current.querySelectorAll('.talent-item');
         gsap.fromTo(
@@ -37,7 +36,7 @@ export default function Talent() {
             opacity: 1,
             y: 0,
             scale: 1,
-            stagger: 0.1,
+            stagger: 0.08,
             duration: 0.8,
             ease: 'power3.out',
             scrollTrigger: {
@@ -49,29 +48,43 @@ export default function Talent() {
         );
       }
 
-      // SVG lines draw
       if (svgRef.current) {
         const lines = svgRef.current.querySelectorAll('.connect-line');
-        lines.forEach((line) => {
-          const length = (line as SVGPathElement).getTotalLength?.() || 200;
-          gsap.set(line, {
-            strokeDasharray: length,
-            strokeDashoffset: length,
-          });
-          gsap.to(line, {
+
+        gsap.fromTo(
+          lines,
+          { strokeDasharray: 0, strokeDashoffset: 0, opacity: 0 },
+          {
+            strokeDasharray: (i) => {
+              const el = lines[i] as SVGPathElement;
+              return el.getTotalLength?.() || 300;
+            },
             strokeDashoffset: 0,
-            duration: 0.8,
+            opacity: 0.5,
+            duration: 1.5,
+            stagger: 0.15,
             ease: 'power2.out',
             scrollTrigger: {
               trigger: sectionRef.current,
               start: 'top 50%',
               toggleActions: 'play none none none',
             },
+          }
+        );
+
+        // Pulse animation on lines
+        lines.forEach((line) => {
+          gsap.to(line, {
+            opacity: 0.65,
+            duration: 2,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            delay: Math.random() * 2,
           });
         });
       }
 
-      // CTA fade in
       if (ctaRef.current) {
         gsap.fromTo(
           ctaRef.current,
@@ -104,7 +117,7 @@ export default function Talent() {
       {/* Background elevation diagram */}
       <svg
         ref={svgRef}
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-20"
+        className="absolute inset-0 w-full h-full pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
         viewBox="0 0 1440 900"
@@ -114,48 +127,53 @@ export default function Talent() {
           className="connect-line"
           d="M 200 200 L 400 350 L 600 200"
           fill="none"
-          stroke="#4A4440"
+          stroke="#C73B2B"
           strokeWidth="1"
+          opacity="0"
         />
         <path
           className="connect-line"
           d="M 400 350 L 800 300 L 1000 450"
           fill="none"
-          stroke="#4A4440"
+          stroke="#C73B2B"
           strokeWidth="1"
+          opacity="0"
         />
         <path
           className="connect-line"
           d="M 600 200 L 800 300 L 600 500"
           fill="none"
-          stroke="#4A4440"
+          stroke="#D4A84B"
           strokeWidth="1"
+          opacity="0"
         />
         <path
           className="connect-line"
           d="M 200 500 L 400 650 L 800 600"
           fill="none"
-          stroke="#4A4440"
+          stroke="#C73B2B"
           strokeWidth="1"
+          opacity="0"
         />
         <path
           className="connect-line"
           d="M 1000 200 L 1200 350 L 1000 450"
           fill="none"
-          stroke="#4A4440"
+          stroke="#D4A84B"
           strokeWidth="1"
+          opacity="0"
         />
         <path
           className="connect-line"
           d="M 800 600 L 1000 450 L 1200 650"
           fill="none"
-          stroke="#4A4440"
+          stroke="#C73B2B"
           strokeWidth="1"
+          opacity="0"
         />
       </svg>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
-        {/* Section header */}
         <div className="mb-16 md:mb-24">
           <h2
             className="text-ivory font-syne text-3xl md:text-[clamp(2.5rem,5vw,4rem)] tracking-[-0.02em] mb-4"
@@ -171,7 +189,6 @@ export default function Talent() {
           </p>
         </div>
 
-        {/* Talent grid */}
         <div
           ref={gridRef}
           className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6"
@@ -188,12 +205,9 @@ export default function Talent() {
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   loading="lazy"
                 />
-                {/* Hover glow */}
                 <div className="absolute inset-0 bg-terracotta/0 group-hover:bg-terracotta/10 transition-all duration-500" />
-                {/* Structural node indicator */}
                 <div className="absolute top-3 right-3 w-2 h-2 bg-charcoal group-hover:bg-terracotta transition-colors duration-500 rotate-45" />
               </div>
-              {/* Label on hover */}
               <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <p
                   className="text-ivory font-dm text-[0.7rem] tracking-[0.05em]"
@@ -206,7 +220,6 @@ export default function Talent() {
           ))}
         </div>
 
-        {/* CTA */}
         <div ref={ctaRef} className="mt-16 md:mt-24 text-center opacity-0">
           <a
             href="#cta"

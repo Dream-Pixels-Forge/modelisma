@@ -1,5 +1,8 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -53,7 +56,6 @@ export default function Hero() {
       );
     }
 
-    // Scroll indicator pulse
     if (chevronRef.current) {
       gsap.to(chevronRef.current, {
         opacity: 0.4,
@@ -64,12 +66,24 @@ export default function Hero() {
       });
     }
 
+    // Parallax on hero background
+    if (imageContainerRef.current) {
+      gsap.to(imageContainerRef.current, {
+        yPercent: 15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.5,
+        },
+      });
+    }
+
     return () => {
       tl.kill();
     };
   }, []);
-
-  const brandParts = ['MOD', 'ELI', 'SMA'];
 
   return (
     <section
@@ -77,7 +91,6 @@ export default function Hero() {
       id="hero"
       className="relative w-full h-screen bg-umber overflow-hidden flex flex-col items-center justify-center"
     >
-      {/* Brand name top-left - vertical stacked */}
       <div className="absolute top-16 left-4 md:top-20 md:left-10 z-10">
         <div ref={brandRef} className="flex flex-col">
           <span
@@ -107,20 +120,18 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Collection Image - replaces 3D elements */}
       <div
         ref={imageContainerRef}
-        className="absolute inset-0 opacity-0"
+        className="absolute inset-0 opacity-0 will-change-transform"
       >
         <img
-          src="/images/collection-1.jpg"
+          src="/images/collection-1.webp"
           alt="MODELISMA Collection"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-umber/30" />
       </div>
 
-      {/* Scroll indicator */}
       <div
         ref={chevronRef}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-0 z-10"

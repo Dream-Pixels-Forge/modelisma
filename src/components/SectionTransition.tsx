@@ -14,41 +14,30 @@ export default function SectionTransition({
   direction = 'left',
 }: SectionTransitionProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
+    if (!ref.current || !overlayRef.current) return;
 
     const ctx = gsap.context(() => {
-      const clipPaths: Record<string, { from: string; to: string }> = {
-        left: {
-          from: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
-          to: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-        },
-        right: {
-          from: 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)',
-          to: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-        },
-        top: {
-          from: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
-          to: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-        },
-        bottom: {
-          from: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)',
-          to: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-        },
+      const fromClip: Record<string, string> = {
+        left: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
+        right: 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)',
+        top: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)',
+        bottom: 'polygon(0 0, 100% 0, 100% 0, 0 0)',
       };
 
       gsap.fromTo(
-        ref.current,
-        { clipPath: clipPaths[direction].from },
+        overlayRef.current,
+        { clipPath: fromClip[direction] },
         {
-          clipPath: clipPaths[direction].to,
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
           ease: 'power3.inOut',
           scrollTrigger: {
             trigger: ref.current,
-            start: 'top 90%',
-            end: 'top 30%',
-            scrub: 1,
+            start: 'top bottom',
+            end: 'top top',
+            scrub: true,
           },
         }
       );
@@ -60,11 +49,16 @@ export default function SectionTransition({
   return (
     <div
       ref={ref}
-      className="h-[30vh] md:h-[40vh] w-full"
-      style={{
-        backgroundColor: color,
-        clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
-      }}
-    />
+      className="relative w-full h-[15vh] overflow-hidden"
+    >
+      <div
+        ref={overlayRef}
+        className="absolute inset-0 will-change-transform"
+        style={{
+          backgroundColor: color,
+          clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
+        }}
+      />
+    </div>
   );
 }

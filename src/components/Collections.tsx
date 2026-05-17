@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -8,19 +8,19 @@ const collections = [
   {
     name: 'The Column',
     material: 'Structured linen, terracotta-dyed cotton, architectural boning',
-    image: '/images/collection-1.jpg',
+    image: '/images/collection-1.webp',
     label: 'SS / 2024',
   },
   {
     name: 'The Façade',
     material: 'Raw silk, geometric paneling, structural mesh',
-    image: '/images/collection-2.jpg',
+    image: '/images/collection-2.webp',
     label: 'AW / 2024',
   },
   {
     name: 'The Span',
     material: 'Draped wool, tensile thread, concrete-dust pigment',
-    image: '/images/collection-3.jpg',
+    image: '/images/collection-3.webp',
     label: 'SS / 2025',
   },
 ];
@@ -28,15 +28,12 @@ const collections = [
 export default function Collections() {
   const sectionRef = useRef<HTMLElement>(null);
   const piecesRef = useRef<(HTMLDivElement | null)[]>([]);
-  const progressRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [showProgress, setShowProgress] = useState(false);
 
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      piecesRef.current.forEach((piece) => {
+      piecesRef.current.forEach((piece, i) => {
         if (!piece) return;
 
         const img = piece.querySelector('.collection-img');
@@ -44,12 +41,15 @@ export default function Collections() {
         const label = piece.querySelector('.collection-label');
         const blueprint = piece.querySelector('.blueprint-bg');
 
+        // Vary pace: first piece slow, second fast, third in between
+        const pace = [2.5, 0.8, 1.5][i] || 1;
+
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: piece,
             start: 'top 80%',
             end: 'top 20%',
-            scrub: 1,
+            scrub: pace,
           },
         });
 
@@ -90,25 +90,6 @@ export default function Collections() {
         }
       });
 
-      // Progress indicator
-      if (progressRef.current) {
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: 'top 20%',
-          end: 'bottom 80%',
-          onEnter: () => setShowProgress(true),
-          onLeave: () => setShowProgress(false),
-          onEnterBack: () => setShowProgress(true),
-          onLeaveBack: () => setShowProgress(false),
-          onUpdate: (self) => {
-            const idx = Math.min(
-              Math.floor(self.progress * collections.length),
-              collections.length - 1
-            );
-            setActiveIndex(idx);
-          },
-        });
-      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -116,23 +97,6 @@ export default function Collections() {
 
   return (
     <section ref={sectionRef} id="collections" className="relative bg-umber">
-      {/* Progress dots */}
-      <div
-        ref={progressRef}
-        className={`fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-3 transition-opacity duration-500 ${
-          showProgress ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-      >
-        {collections.map((_, i) => (
-          <div
-            key={i}
-            className={`w-2 h-2 rounded-full transition-colors duration-500 ${
-              i === activeIndex ? 'bg-terracotta' : 'bg-charcoal'
-            }`}
-          />
-        ))}
-      </div>
-
       {/* Section header */}
       <div className="py-16 md:py-24 px-6 md:px-12">
         <h2

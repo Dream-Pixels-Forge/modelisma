@@ -5,21 +5,21 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const carouselImages = [
-  '/images/editorial-1.jpg',
-  '/images/editorial-2.jpg',
-  '/images/editorial-3.jpg',
-  '/images/editorial-4.jpg',
-  '/images/editorial-5.jpg',
-  '/images/editorial-6.jpg',
-  '/images/editorial-7.jpg',
-  '/images/editorial-8.jpg',
-  '/images/editorial-9.jpg',
-  '/images/collection-1.jpg',
-  '/images/collection-2.jpg',
-  '/images/collection-3.jpg',
-  '/images/collection-4.jpg',
-  '/images/collection-5.jpg',
-  '/images/collection-6.jpg',
+  '/images/editorial-1.webp',
+  '/images/editorial-2.webp',
+  '/images/editorial-3.webp',
+  '/images/editorial-4.webp',
+  '/images/editorial-5.webp',
+  '/images/editorial-6.webp',
+  '/images/editorial-7.webp',
+  '/images/editorial-8.webp',
+  '/images/editorial-9.webp',
+  '/images/collection-1.webp',
+  '/images/collection-2.webp',
+  '/images/collection-3.webp',
+  '/images/collection-4.webp',
+  '/images/collection-5.webp',
+  '/images/collection-6.webp',
 ];
 
 const ctas = [
@@ -41,6 +41,7 @@ export default function CTA() {
   const sectionRef = useRef<HTMLElement>(null);
   const columnsRef = useRef<HTMLDivElement>(null);
   const taglineRef = useRef<HTMLParagraphElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -81,6 +82,15 @@ export default function CTA() {
           0.8
         );
       }
+
+      if (carouselRef.current) {
+        gsap.to(carouselRef.current, {
+          xPercent: -50,
+          duration: 20,
+          ease: 'none',
+          repeat: -1,
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -95,8 +105,11 @@ export default function CTA() {
       {/* Cinematic Carousel */}
       <div className="relative w-full max-w-[2160px] aspect-[216/92.5] mb-16 md:mb-20 overflow-hidden">
         <div className="absolute inset-0 flex items-center">
-          <div className="carousel-track flex gap-4">
-            {[...carouselImages, ...carouselImages, ...carouselImages, ...carouselImages].map((src, i) => (
+          <div
+            ref={carouselRef}
+            className="flex gap-4 will-change-transform"
+          >
+            {[...carouselImages, ...carouselImages].map((src, i) => (
               <div
                 key={i}
                 className="flex-shrink-0 w-[calc(100vw/2)] md:w-[calc(100vw/4)] max-w-[540px] aspect-[216/92.5] overflow-hidden"
@@ -112,15 +125,6 @@ export default function CTA() {
           </div>
         </div>
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-umber via-transparent to-umber" />
-        <style>{`
-          .carousel-track {
-            animation: scroll-left 40s linear infinite;
-          }
-          @keyframes scroll-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-25%); }
-          }
-        `}</style>
       </div>
 
       {/* CTA Columns */}

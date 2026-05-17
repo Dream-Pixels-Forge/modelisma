@@ -43,9 +43,9 @@ export default function Philosophy() {
                 ease: 'power2.out',
                 scrollTrigger: {
                   trigger: wall,
-                  start: 'top 70%',
-                  end: 'top 30%',
-                  scrub: true,
+              start: 'top 75%',
+              end: 'top 35%',
+              scrub: 2,
                 },
               }
             );
@@ -113,8 +113,8 @@ export default function Philosophy() {
           <div
             key={i}
             ref={(el) => { wallsRef.current[i] = el; }}
-            className={`relative flex items-center justify-center flex-shrink-0 ${
-              isMobile ? 'min-h-[60vh] py-24' : 'w-screen h-full'
+              className={`relative flex items-center justify-center flex-shrink-0 ${
+              isMobile ? 'min-h-[50vh] py-20' : 'w-screen h-full'
             }`}
             style={{
               background: `linear-gradient(135deg, ${

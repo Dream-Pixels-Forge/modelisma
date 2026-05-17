@@ -19,10 +19,10 @@ export default function Designer() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 60%',
-          end: 'top 20%',
+          start: 'top 70%',
+          end: 'top 10%',
           scrub: false,
-          toggleActions: 'play none none none',
+          toggleActions: 'play none none reverse',
         },
       });
 
@@ -98,7 +98,7 @@ export default function Designer() {
           style={{ filter: 'brightness(0)' }}
         >
           <img
-            src="/images/designer-portrait.jpg"
+            src="/images/designer-portrait.webp"
             alt="Deborah Sikidisa"
             className="w-full h-full object-cover"
             loading="lazy"
