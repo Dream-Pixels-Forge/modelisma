@@ -1,8 +1,7 @@
+![Uploading modelisma1.png…]()
+
+
 # Modelisma
-
-
-
-
 
 A cinematic, editorial-style website showcasing African fashion — celebrating editorial features, designer collections, and emerging talent from the continent.
 
