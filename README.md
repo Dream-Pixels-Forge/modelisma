@@ -1,4 +1,5 @@
-![Uploading modelisma1.png…]()
+<img width="1920" height="966" alt="preview" src="https://github.com/user-attachments/assets/39de352c-c56c-4d27-996b-86faaa1250cd" />
+
 
 
 # Modelisma
